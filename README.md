@@ -97,6 +97,29 @@ mvn verify -Pintegration  # adds a LocalStack-backed integration test (requires 
   rather than a hand-written mock. This is wired through the `stsEndpointOverride` connection
   property, which also has a legitimate production use: pointing at a private STS VPC endpoint.
 
+## Releasing
+
+CI (`.github/workflows/build.yml`) only runs tests — it never has access to the signing key or
+Central credentials. Releases are signed and published locally, intentionally, to keep the private
+key off GitHub entirely:
+
+```
+mvn versions:set -DnewVersion=X.Y.Z -DgenerateBackupPoms=false   # drop -SNAPSHOT
+git commit -am "Release X.Y.Z"
+git tag vX.Y.Z
+
+mvn -P release deploy      # signs with the local GPG key, uploads to Central for validation
+                            # requires ~/.m2/settings.xml with a <server id="central"> user token
+
+mvn versions:set -DnewVersion=X.Y.(Z+1)-SNAPSHOT -DgenerateBackupPoms=false   # resume development
+git commit -am "Prepare next development iteration"
+
+git push && git push --tags
+```
+
+A pushed tag also gives [JitPack](https://jitpack.io/) a resolvable version
+(`com.github.joshua-clayton:iam-maria-now:vX.Y.Z`) with no further setup required.
+
 ## License
 
 LGPL-2.1-or-later. See [LICENSE](./LICENSE). This project implements the public `CredentialPlugin` /
