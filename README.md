@@ -31,7 +31,7 @@ This plugin is based on `mariadb-java-client`'s own built-in identity plugin, bu
 
 ```xml
 <dependency>
-    <groupId>io.github.joshuaclayton</groupId>
+    <groupId>io.github.joshua-clayton</groupId>
     <artifactId>iam-maria-now</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 </dependency>
