@@ -32,6 +32,10 @@ import org.mariadb.jdbc.HostAddress;
 import org.mariadb.jdbc.plugin.Credential;
 import org.mariadb.jdbc.plugin.CredentialPlugin;
 
+/**
+ * MariaDB Connector/J {@link CredentialPlugin} ({@code credentialType=AWS-IAM-ASSUME-ROLE}) that generates
+ * RDS/Aurora IAM auth tokens using credentials obtained by assuming an IAM role via STS.
+ */
 public class AwsIamAssumeRoleCredentialPlugin implements CredentialPlugin {
 
     private static final String TYPE = "AWS-IAM-ASSUME-ROLE";
@@ -43,6 +47,7 @@ public class AwsIamAssumeRoleCredentialPlugin implements CredentialPlugin {
     private CredentialGenerator generator;
     private KeyCache key;
 
+    /** No-arg constructor required by the {@code ServiceLoader} SPI that MariaDB Connector/J discovers this through. */
     public AwsIamAssumeRoleCredentialPlugin() {
         this((conf, userName, hostAddress) -> new AwsAssumeRoleCredentialGenerator(conf.nonMappedOptions(), userName,
                 hostAddress));
